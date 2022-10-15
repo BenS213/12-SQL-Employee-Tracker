@@ -1,13 +1,11 @@
-const { prompt } = require('inquiere');
-const mysql = requre('mysql2');
+const { prompt } = require('inquirer');
+const mysql = require('mysql2');
 require('console.table');
 
 const db = mysql.createConnection(
     {
       host: 'localhost',
-      // MySQL username,
       user: 'root',
-      // MySQL password
       password: 'rootroot',
       database: 'employees'
     },
@@ -34,7 +32,7 @@ const db = mysql.createConnection(
     ])
 switch (choice) {
     case 'VIEW_EMPLOYEES':
-        // DO SOMETHING
+        viewEmployees()
         break;
     case 'VIEW_DEPARTMENTS':
         // do something
@@ -42,7 +40,7 @@ switch (choice) {
     case 'EXIT':
         process.exit();
         break;
-    default
+    default:
         process.exit();
 }
 
@@ -50,7 +48,10 @@ switch (choice) {
 
 
   const viewEmployees = async () => {
-    const [employeeData] = await db.query("SELECT * FROM employee")
+    const [employeeData] = await db.query("SELECT * FROM employee", function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+      });
     console.table(employeeData);
     mainMenu()
   };
